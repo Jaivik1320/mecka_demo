@@ -1,0 +1,1281 @@
+<title>Mecka — Robotics Data Platform</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --bg:       #080b0f;
+  --bg2:      #0d1117;
+  --bg3:      #141b22;
+  --bg4:      #1a2230;
+  --border:   #1e2d3d;
+  --border2:  #263546;
+  --accent:   #00d4ff;
+  --accent2:  #0099cc;
+  --accent-bg:#00d4ff12;
+  --accent-mid:#00d4ff22;
+  --green:    #00e676;
+  --green-bg: #00e67610;
+  --amber:    #ffb300;
+  --amber-bg: #ffb30010;
+  --red:      #ff5252;
+  --red-bg:   #ff525210;
+  --purple:   #b388ff;
+  --purple-bg:#b388ff10;
+  --text:     #e8edf2;
+  --text2:    #7a8fa6;
+  --text3:    #3d5166;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow: hidden;
+  height: 100vh;
+}
+
+.shell { display: flex; height: 100vh; overflow: hidden; }
+
+/* ── Sidebar ─────────────────────── */
+.sidebar {
+  width: 216px; min-width: 216px;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+}
+
+.logo-row {
+  padding: 18px 16px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.logo-mark {
+  width: 30px; height: 30px; border-radius: 7px;
+  background: linear-gradient(135deg, var(--accent) 0%, #0066ff 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 900; color: #000; letter-spacing: -1px;
+  flex-shrink: 0;
+}
+.logo-name { font-size: 15px; font-weight: 800; letter-spacing: -0.3px; }
+.logo-sub  { font-size: 9px; color: var(--text3); font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
+
+.nav-sect { padding: 12px 8px 0; }
+.nav-label { font-size: 9px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 1.2px; padding: 0 8px; margin-bottom: 2px; }
+.nav-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px; border-radius: 6px;
+  cursor: pointer; color: var(--text2);
+  font-size: 12px; font-weight: 500;
+  margin-bottom: 1px; transition: all 0.1s;
+  position: relative;
+}
+.nav-item svg { width: 13px; height: 13px; flex-shrink: 0; }
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+.nav-item.active { background: var(--accent-bg); color: var(--accent); font-weight: 600; }
+.nav-item.active svg { stroke: var(--accent); }
+.nav-badge {
+  margin-left: auto; background: var(--amber); color: #000;
+  font-size: 9px; font-weight: 800; padding: 1px 5px; border-radius: 8px;
+}
+.nav-badge-red { background: var(--red); color: #fff; }
+
+.sidebar-footer {
+  margin-top: auto; padding: 10px 8px;
+  border-top: 1px solid var(--border);
+}
+.user-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px; border-radius: 6px; cursor: pointer;
+}
+.user-row:hover { background: var(--bg3); }
+.ava {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #0066ff);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 800; color: #000; flex-shrink: 0;
+}
+.uname { font-size: 11px; font-weight: 600; }
+.urole { font-size: 10px; color: var(--text3); }
+
+/* ── Main ────────────────────────── */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+
+.topbar {
+  display: flex; align-items: center;
+  padding: 0 20px; height: 50px; min-height: 50px;
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  gap: 10px; flex-shrink: 0;
+}
+.page-title { font-size: 14px; font-weight: 700; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+
+.btn {
+  padding: 5px 12px; border-radius: 6px; border: none;
+  font-size: 11px; font-weight: 700; font-family: inherit;
+  cursor: pointer; transition: all 0.1s; white-space: nowrap;
+}
+.btn-primary { background: var(--accent); color: #000; }
+.btn-primary:hover { background: #33ddff; }
+.btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border2); }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+.content { flex: 1; overflow-y: auto; padding: 18px 20px; }
+.content::-webkit-scrollbar { width: 4px; }
+.content::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* ── Cards ───────────────────────── */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+}
+.card-hd {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 14px; border-bottom: 1px solid var(--border);
+}
+.card-title { font-size: 12px; font-weight: 700; }
+.card-bd { padding: 14px; }
+
+/* ── Stats ───────────────────────── */
+.stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 14px; }
+.stat {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px;
+  position: relative; overflow: hidden;
+}
+.stat::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+}
+.stat-blue::before  { background: var(--accent); }
+.stat-green::before { background: var(--green); }
+.stat-amber::before { background: var(--amber); }
+.stat-purple::before{ background: var(--purple); }
+.stat-num { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; line-height: 1; margin-bottom: 3px; font-family: 'JetBrains Mono', monospace; }
+.stat-label { font-size: 10px; color: var(--text2); font-weight: 600; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 5px; }
+.stat-d { font-size: 10px; }
+.up { color: var(--green); font-weight: 700; }
+.dn { color: var(--red); font-weight: 700; }
+.muted { color: var(--text3); }
+
+/* ── Grid layouts ────────────────── */
+.g2  { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.g23 { display: grid; grid-template-columns: 3fr 2fr; gap: 10px; margin-bottom: 10px; }
+.g3  { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+
+/* ── Chips ───────────────────────── */
+.chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 7px; border-radius: 20px;
+  font-size: 10px; font-weight: 700; white-space: nowrap;
+}
+.cg  { background: var(--green-bg);  color: var(--green); border: 1px solid #00e67620; }
+.ca  { background: var(--amber-bg);  color: var(--amber); border: 1px solid #ffb30020; }
+.cb  { background: var(--accent-bg); color: var(--accent); border: 1px solid #00d4ff20; }
+.cr  { background: var(--red-bg);    color: var(--red); border: 1px solid #ff525220; }
+.cp  { background: var(--purple-bg); color: var(--purple); border: 1px solid #b388ff20; }
+.dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
+.dot.p { animation: pd 1.4s infinite; }
+@keyframes pd { 0%,100%{opacity:1}50%{opacity:.3} }
+
+/* ── Tables ──────────────────────── */
+.tbl { width: 100%; border-collapse: collapse; }
+.tbl th {
+  text-align: left; padding: 7px 12px;
+  font-size: 9px; font-weight: 700; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 0.8px;
+  border-bottom: 1px solid var(--border);
+}
+.tbl td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr:hover td { background: var(--bg3); }
+.mono { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text2); }
+
+/* ── Log ─────────────────────────── */
+.log-box {
+  font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+  line-height: 1.85; max-height: 190px; overflow-y: auto;
+  background: var(--bg); border-radius: 7px; padding: 10px 12px;
+}
+.log-box::-webkit-scrollbar { width: 3px; }
+.log-box::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+.log-row { display: flex; gap: 9px; }
+.log-ts  { color: var(--text3); flex-shrink: 0; }
+.log-lv  { flex-shrink: 0; font-weight: 700; }
+.log-lv.i { color: var(--accent); }
+.log-lv.s { color: var(--green); }
+.log-lv.w { color: var(--amber); }
+.log-lv.e { color: var(--red); }
+.log-txt { color: var(--text2); }
+.log-txt em { color: var(--text); font-style: normal; }
+
+/* ── Video player ────────────────── */
+.video-player {
+  background: #000;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+.vp-screen {
+  width: 100%; aspect-ratio: 16/9;
+  background: #000;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.vp-streams {
+  display: grid; grid-template-columns: 1fr 1fr;
+  width: 100%; height: 100%; gap: 1px; background: #111;
+}
+.vp-stream {
+  position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; color: var(--text3);
+  background: #060a0e;
+}
+.vp-stream canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.vp-stream-label {
+  position: absolute; top: 5px; left: 6px; z-index: 2;
+  background: rgba(0,0,0,.7); color: var(--accent);
+  font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700;
+  padding: 1px 6px; border-radius: 3px; border: 1px solid var(--accent-mid);
+}
+.vp-overlay-box {
+  position: absolute; border: 1.5px solid var(--green);
+  border-radius: 2px; z-index: 3;
+  display: flex; align-items: flex-start;
+}
+.vp-box-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 700;
+  color: #000; background: var(--green);
+  padding: 0 4px; line-height: 14px; border-radius: 1px 0 0 0;
+}
+.vp-controls {
+  background: var(--bg3); border-top: 1px solid var(--border);
+  padding: 8px 12px; display: flex; align-items: center; gap: 10px;
+}
+.vp-timeline {
+  flex: 1; height: 3px; background: var(--border2);
+  border-radius: 2px; overflow: hidden; cursor: pointer;
+}
+.vp-progress { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.5s linear; }
+.vp-time { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text2); flex-shrink: 0; }
+.play-btn {
+  width: 24px; height: 24px; border-radius: 50%; background: var(--accent);
+  border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.play-btn svg { width: 10px; height: 10px; fill: #000; }
+
+/* ── QA Panel ────────────────────── */
+.qa-item {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 11px 13px; margin-bottom: 8px;
+}
+.qa-item:last-child { margin-bottom: 0; }
+.qa-hd { display: flex; align-items: center; gap: 7px; margin-bottom: 6px; }
+.qa-title { font-size: 12px; font-weight: 700; flex: 1; }
+.qa-meta  { font-size: 10px; color: var(--text2); line-height: 1.6; margin-bottom: 8px; }
+.qa-ft    { display: flex; align-items: center; gap: 6px; }
+
+/* ── Metric bars ─────────────────── */
+.mbar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.mbar-row:last-child { margin-bottom: 0; }
+.mbar-label { font-size: 11px; font-weight: 500; width: 110px; flex-shrink: 0; }
+.mbar-bg { flex: 1; height: 5px; background: var(--bg4); border-radius: 3px; overflow: hidden; }
+.mbar-fill { height: 100%; border-radius: 3px; transition: width 1.2s ease; }
+.mbar-val { font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--text2); width: 36px; text-align: right; }
+
+/* ── Code ────────────────────────── */
+.code-tabs { display: flex; gap: 2px; padding: 9px 12px 0; background: var(--bg2); }
+.ctab {
+  padding: 5px 11px; border-radius: 5px 5px 0 0;
+  font-size: 11px; font-weight: 600; cursor: pointer; color: var(--text2);
+  border: 1px solid transparent; border-bottom: none; margin-bottom: -1px;
+  background: transparent; font-family: inherit;
+}
+.ctab.active { background: var(--bg3); color: var(--text); border-color: var(--border); border-bottom-color: var(--bg3); }
+.ctab:hover:not(.active) { color: var(--text); }
+.code-sep { border-bottom: 1px solid var(--border); background: var(--bg2); }
+.code-area {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  line-height: 1.9; padding: 14px 16px; overflow-x: auto;
+  max-height: 400px; overflow-y: auto; background: var(--bg3);
+}
+.code-area::-webkit-scrollbar { width: 3px; height: 3px; }
+.code-area::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+.kw{color:#7ee8ff}.fn{color:#57f287}.str{color:#ffd080}
+.cm{color:var(--text3);font-style:italic}.ty{color:#c084fc}
+.num{color:#fb7185}.op{color:var(--text2)}.var{color:var(--text)}
+.dec{color:#34d399}
+
+/* ── SVG chart ───────────────────── */
+.chart-wrap { overflow: hidden; border-radius: 7px; }
+
+/* ── Global metrics ──────────────── */
+.country-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.country-row:last-child { margin-bottom: 0; }
+.country-flag { font-size: 14px; }
+.country-name { font-size: 11px; font-weight: 500; width: 60px; }
+
+/* ── Improve overlay ─────────────── */
+.improve-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 100%);
+  color: #000; font-size: 10px; font-weight: 800;
+  padding: 3px 10px; border-radius: 20px; cursor: pointer;
+  transition: opacity 0.1s; border: none; font-family: inherit;
+}
+.improve-pill:hover { opacity: 0.85; }
+
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.8);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.overlay.open { opacity: 1; pointer-events: auto; }
+.modal {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 14px; padding: 24px; max-width: 700px; width: 94%;
+  max-height: 88vh; overflow-y: auto;
+}
+.modal::-webkit-scrollbar { width: 3px; }
+.modal::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+.modal h2 { font-size: 16px; font-weight: 900; margin-bottom: 3px; }
+.modal .msub { font-size: 11px; color: var(--text2); margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+.msect { margin-bottom: 16px; }
+.msect h3 { font-size: 10px; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.mitem {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 11px 13px; margin-bottom: 7px;
+}
+.mitem:last-child { margin-bottom: 0; }
+.mitem-title { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+.mitem-body { font-size: 11px; color: var(--text2); line-height: 1.65; }
+.mitem-body code {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--bg4); padding: 1px 5px; border-radius: 3px;
+  color: var(--accent); font-size: 10px;
+}
+.close-x {
+  float: right; background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 5px; padding: 3px 10px; font-size: 11px; font-weight: 700;
+  color: var(--text2); cursor: pointer; font-family: inherit; margin-top: -2px;
+}
+.close-x:hover { color: var(--text); border-color: var(--accent); }
+
+@media (max-width: 860px) {
+  .stats-grid, .g3 { grid-template-columns: 1fr 1fr; }
+  .g2, .g23 { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+}
+</style>
+
+<!-- IMPROVE OVERLAY -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <button class="close-x" onclick="document.getElementById('overlay').classList.remove('open')">Close ✕</button>
+    <h2>How JP Would Improve This</h2>
+    <div class="msub">Specific features I'd ship next — mapped to Mecka's stack and JD focus areas.</div>
+
+    <div class="msect">
+      <h3>🎥 Web & Media / Egocentric Viewer</h3>
+      <div class="mitem">
+        <div class="mitem-title">Multi-Stream Timeline Sync with Frame-Level Seek</div>
+        <div class="mitem-body">The current 4-stream viewer scrubs all streams together, but frame timestamps can drift between cameras. I'd add a <code>TimelineSync</code> class that aligns streams by hardware timestamp (not wall clock), detects drift >2 frames, and auto-corrects. Critical for humanoid data where head-cam and hand-cam need sub-50ms sync for labeling accuracy.</div>
+      </div>
+      <div class="mitem">
+        <div class="mitem-title">Range-Based Chunk Loading for Large Sensor Files</div>
+        <div class="mitem-body">Video files from ego-capture runs can be 10–50GB. I'd use <code>HTTP Range</code> requests + a sliding 30-second buffer window in the player — only 2–3 chunks in memory at once. Eliminates the need to fully download before playback starts. Same pattern I used to serve large datasets at Linamar for the shop-floor dashboard without pagination lag.</div>
+      </div>
+    </div>
+
+    <div class="msect">
+      <h3>⚙️ Data Platform Backend</h3>
+      <div class="mitem">
+        <div class="mitem-title">Ingest Pipeline with Idempotent Chunk Processing</div>
+        <div class="mitem-body">High-throughput sensor ingest is prone to partial writes on network failure. I'd wrap each chunk in a <code>content_hash → status</code> table in Postgres so re-uploads are deduplicated cheaply. Worker picks up only <code>status = 'pending'</code> rows. Guarantees exactly-once delivery to the labeling queue without distributed transactions.</div>
+      </div>
+      <div class="mitem">
+        <div class="mitem-title">Partial Index Strategy for Dataset Queries</div>
+        <div class="mitem-body">QA queries like "all unlabeled clips from JP-US-07 this week" hit the full clips table. I'd add <code>CREATE INDEX ... WHERE status = 'unlabeled'</code> partial indexes per status + <code>capture_session_id</code>. Cuts query time significantly as the table grows — a pattern I shipped at iMatr on a comparable multi-tenant schema that cut query time ~60%.</div>
+      </div>
+    </div>
+
+    <div class="msect">
+      <h3>🤖 AI as Force Multiplier</h3>
+      <div class="mitem">
+        <div class="mitem-title">LLM-Assisted Label Validation</div>
+        <div class="mitem-body">After a labeler submits annotations, run a background job that sends the frame + label JSON to Claude via <code>tool_use</code> with a structured schema validator. Claude flags bounding boxes that are geometrically implausible (e.g. a "hand" label that's 60% of the frame), triggering a QA review before the clip ships to the AI lab. Reduces bad-label escape rate without manual spot-checks.</div>
+      </div>
+      <div class="mitem">
+        <div class="mitem-title">Semantic Search Across Capture Sessions</div>
+        <div class="mitem-body">Researchers currently search clips by metadata (session ID, date, operator). I'd embed clip metadata + transcript/narration with <code>text-embedding-3-small</code> into pgvector, exposing a natural-language search: "find all clips where the robot picks up a cup near a counter." Turns the dataset library into a queryable knowledge base for training teams.</div>
+      </div>
+    </div>
+
+    <div class="msect">
+      <h3>💰 Payments & Ops</h3>
+      <div class="mitem">
+        <div class="mitem-title">Operator Payout Reconciliation Dashboard</div>
+        <div class="mitem-body">International labeling operators are paid per validated clip. I'd build an append-only <code>payout_ledger</code> table (no UPDATE/DELETE) with a reconciliation view that computes operator earnings, deducts rejected clips, and surfaces discrepancies before bank transfer. Auditability baked in — every row has a <code>clip_id</code> foreign key so earnings trace back to work.</div>
+      </div>
+    </div>
+
+    <div class="msect">
+      <h3>🔧 Internal Tooling / 0→1</h3>
+      <div class="mitem">
+        <div class="mitem-title">Country Ops Management App</div>
+        <div class="mitem-body">Replace spreadsheet-based ops tracking with a React dashboard: operator headcount by country, capture quota vs actual, QA pass rates, delivery SLA status. Non-technical ops managers get a clean read-only view; engineers get a write view with quota adjustment. Identical to the shop-floor dashboard I built at Linamar — same problem, different domain.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SHELL -->
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="logo-row">
+      <div class="logo-mark">M</div>
+      <div>
+        <div class="logo-name">Mecka</div>
+        <div class="logo-sub">Data Platform</div>
+      </div>
+    </div>
+
+    <div class="nav-sect">
+      <div class="nav-label">Platform</div>
+      <div class="nav-item active" onclick="nav('dashboard',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item" onclick="nav('capture',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M2 12C2 12 5 5 12 5s10 7 10 7-3 7-10 7S2 12 2 12z"/></svg>
+        Capture Sessions
+        <span class="nav-badge">3</span>
+      </div>
+      <div class="nav-item" onclick="nav('viewer',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        Ego Viewer
+      </div>
+      <div class="nav-item" onclick="nav('labeling',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        Labeling Queue
+        <span class="nav-badge nav-badge-red">12</span>
+      </div>
+    </div>
+
+    <div class="nav-sect" style="margin-top:6px">
+      <div class="nav-label">Delivery</div>
+      <div class="nav-item" onclick="nav('qa',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        QA Review
+        <span class="nav-badge">5</span>
+      </div>
+      <div class="nav-item" onclick="nav('delivery',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3"/><rect x="9" y="11" width="14" height="10" rx="2"/><path d="M14 11v-1"/></svg>
+        Deliveries
+      </div>
+      <div class="nav-item" onclick="nav('code',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        Code & APIs
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-row">
+        <div class="ava">JP</div>
+        <div>
+          <div class="uname">Jaivik Parekh</div>
+          <div class="urole">Software Engineer</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="page-title" id="pageTitle">Dashboard</div>
+      <div class="topbar-right">
+        <span class="chip cg"><span class="dot p"></span>Ingest live</span>
+        <button class="improve-pill" onclick="document.getElementById('overlay').classList.add('open')">✦ How I'd improve this</button>
+        <button class="btn btn-ghost">Export</button>
+        <button class="btn btn-primary">+ New Session</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ══ DASHBOARD ══ -->
+      <div class="panel active" id="panel-dashboard">
+        <div class="stats-grid">
+          <div class="stat stat-blue">
+            <div class="stat-label">Clips Captured</div>
+            <div class="stat-num" style="color:var(--accent)" id="cntClips">—</div>
+            <div class="stat-d"><span class="up">↑ 2.3k</span> <span class="muted">today</span></div>
+          </div>
+          <div class="stat stat-green">
+            <div class="stat-label">Labels Validated</div>
+            <div class="stat-num" style="color:var(--green)" id="cntLabels">—</div>
+            <div class="stat-d"><span class="up">↑ 94.2%</span> <span class="muted">pass rate</span></div>
+          </div>
+          <div class="stat stat-amber">
+            <div class="stat-label">Data Delivered</div>
+            <div class="stat-num" style="color:var(--amber)" id="cntDelivered">—</div>
+            <div class="stat-d"><span class="muted">to 4 AI labs</span></div>
+          </div>
+          <div class="stat stat-purple">
+            <div class="stat-label">Active Operators</div>
+            <div class="stat-num" style="color:var(--purple)" id="cntOps">—</div>
+            <div class="stat-d"><span class="muted">across 7 countries</span></div>
+          </div>
+        </div>
+
+        <div class="g23">
+          <!-- Ingest throughput chart -->
+          <div class="card">
+            <div class="card-hd">
+              <div class="card-title">Ingest Throughput</div>
+              <span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--green)">● streaming</span>
+            </div>
+            <div class="card-bd" style="padding:10px 14px 14px">
+              <svg id="throughputChart" viewBox="0 0 500 90" width="100%" style="overflow:visible"></svg>
+            </div>
+          </div>
+          <!-- Country ops -->
+          <div class="card">
+            <div class="card-hd"><div class="card-title">Operator Regions</div></div>
+            <div class="card-bd" id="countryList"></div>
+          </div>
+        </div>
+
+        <div class="g2">
+          <!-- Recent sessions -->
+          <div class="card">
+            <div class="card-hd">
+              <div class="card-title">Recent Capture Sessions</div>
+              <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="nav('capture',document.querySelectorAll('.nav-item')[1])">View all</button>
+            </div>
+            <div style="overflow-x:auto">
+              <table class="tbl" id="sessTable"></table>
+            </div>
+          </div>
+          <!-- Pipeline status -->
+          <div class="card">
+            <div class="card-hd"><div class="card-title">Pipeline Health</div></div>
+            <div class="card-bd">
+              <div id="pipelineHealth"></div>
+              <div style="margin-top:12px">
+                <div class="card-title" style="margin-bottom:8px;font-size:11px;color:var(--text2)">Ingest Worker Log</div>
+                <div class="log-box" id="logBox"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ CAPTURE ══ -->
+      <div class="panel" id="panel-capture">
+        <div class="card" style="margin-bottom:12px">
+          <div class="card-hd">
+            <div class="card-title">Capture Sessions</div>
+            <button class="btn btn-primary" style="font-size:10px;padding:4px 10px">+ New Session</button>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="tbl" id="captureTable"></table>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="card">
+            <div class="card-hd"><div class="card-title">Scenario Breakdown</div></div>
+            <div class="card-bd" id="scenarioList"></div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><div class="card-title">Ingest Pipeline Log</div></div>
+            <div class="card-bd">
+              <div class="log-box" id="ingestLog"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ VIEWER ══ -->
+      <div class="panel" id="panel-viewer">
+        <div class="g23" style="margin-bottom:0;align-items:start">
+          <div>
+            <div class="video-player">
+              <div class="vp-screen">
+                <div class="vp-streams">
+                  <div class="vp-stream" id="stream0">
+                    <span class="vp-stream-label">CAM-HEAD</span>
+                    <canvas id="c0"></canvas>
+                  </div>
+                  <div class="vp-stream" id="stream1">
+                    <span class="vp-stream-label">CAM-HAND-L</span>
+                    <canvas id="c1"></canvas>
+                  </div>
+                  <div class="vp-stream" id="stream2">
+                    <span class="vp-stream-label">CAM-HAND-R</span>
+                    <canvas id="c2"></canvas>
+                  </div>
+                  <div class="vp-stream" id="stream3">
+                    <span class="vp-stream-label">CAM-EXT</span>
+                    <canvas id="c3"></canvas>
+                  </div>
+                </div>
+                <!-- Bounding boxes rendered by JS -->
+              </div>
+              <div class="vp-controls">
+                <button class="play-btn" id="playBtn" onclick="togglePlay()">
+                  <svg id="playIcon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                </button>
+                <div class="vp-timeline">
+                  <div class="vp-progress" id="vpProgress" style="width:0%"></div>
+                </div>
+                <span class="vp-time" id="vpTime">00:00 / 04:32</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--accent)">1x</span>
+              </div>
+            </div>
+            <div style="display:flex;gap:6px;margin-top:8px">
+              <span class="chip cg">Session JP-US-07</span>
+              <span class="chip ca">Kitchen pick-and-place</span>
+              <span class="chip cp">4 streams · 30fps</span>
+              <span class="chip cb">Frame 2,847 / 8,160</span>
+            </div>
+          </div>
+          <div>
+            <div class="card" style="margin-bottom:10px">
+              <div class="card-hd"><div class="card-title">Label Events</div></div>
+              <div style="overflow-x:auto">
+                <table class="tbl" id="labelTable"></table>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-hd"><div class="card-title">Frame Metadata</div></div>
+              <div class="card-bd" id="frameMeta"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ LABELING ══ -->
+      <div class="panel" id="panel-labeling">
+        <div class="g23">
+          <div class="card">
+            <div class="card-hd">
+              <div class="card-title">Labeling Queue</div>
+              <div style="display:flex;gap:6px">
+                <span class="chip cr">12 pending</span>
+                <button class="btn btn-primary" style="font-size:10px;padding:3px 9px">Assign Batch</button>
+              </div>
+            </div>
+            <div style="overflow-x:auto">
+              <table class="tbl" id="labelQueue"></table>
+            </div>
+          </div>
+          <div>
+            <div class="card" style="margin-bottom:10px">
+              <div class="card-hd"><div class="card-title">Label Accuracy</div></div>
+              <div class="card-bd" id="labelAccuracy"></div>
+            </div>
+            <div class="card">
+              <div class="card-hd"><div class="card-title">AI Validation</div><span class="chip cg"><span class="dot p"></span>Running</span></div>
+              <div class="card-bd">
+                <div class="log-box" id="aiValLog"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ QA ══ -->
+      <div class="panel" id="panel-qa">
+        <div class="g2">
+          <div>
+            <div id="qaList"></div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><div class="card-title">QA Metrics</div></div>
+            <div class="card-bd" id="qaMet"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ DELIVERY ══ -->
+      <div class="panel" id="panel-delivery">
+        <div class="card" style="margin-bottom:12px">
+          <div class="card-hd"><div class="card-title">Deliveries to AI Labs</div></div>
+          <div style="overflow-x:auto"><table class="tbl" id="delivTable"></table></div>
+        </div>
+        <div class="g2">
+          <div class="card">
+            <div class="card-hd"><div class="card-title">Export Validation Log</div></div>
+            <div class="card-bd"><div class="log-box" id="exportLog"></div></div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><div class="card-title">Operator Payouts</div></div>
+            <div style="overflow-x:auto"><table class="tbl" id="payoutTable"></table></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ CODE ══ -->
+      <div class="panel" id="panel-code">
+        <div class="card">
+          <div class="code-tabs" id="codeTabs">
+            <div class="ctab active" onclick="cTab(0,this)">Ingest Pipeline (Python)</div>
+            <div class="ctab" onclick="cTab(1,this)">Chunk API (TypeScript)</div>
+            <div class="ctab" onclick="cTab(2,this)">AI Label Validator</div>
+          </div>
+          <div class="code-sep"></div>
+          <div class="code-area" id="codeArea"></div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+// ── Nav ──────────────────────────────────────────────────
+function nav(id, el) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+  const t={dashboard:'Dashboard',capture:'Capture Sessions',viewer:'Ego Viewer',labeling:'Labeling Queue',qa:'QA Review',delivery:'Deliveries',code:'Code & APIs'};
+  document.getElementById('pageTitle').textContent=t[id]||id;
+  if(id==='viewer') initViewer();
+}
+
+// ── Counters ──────────────────────────────────────────────
+function anim(el,v,s=''){let n=0;const st=v/40;const t=setInterval(()=>{n=Math.min(n+st,v);el.textContent=n>=1000?(n/1000).toFixed(1)+'k':Math.round(n)+s;if(n>=v)clearInterval(t);},16);}
+anim(document.getElementById('cntClips'),84300);
+anim(document.getElementById('cntLabels'),71200);
+anim(document.getElementById('cntDelivered'),2400);
+anim(document.getElementById('cntOps'),142);
+
+// ── Throughput chart ──────────────────────────────────────
+const tpData=[1.2,1.8,2.1,1.6,2.4,2.9,3.1,2.7,3.4,3.8,3.2,4.1,3.9,4.5,4.2,3.8,4.8,5.1,4.6,5.3,5.0,4.7,5.6,5.9];
+const W=500,H=90,PX=4,PY=8;
+const mn=0,mx=7;
+const xs=i=>PX+(i/(tpData.length-1))*(W-2*PX);
+const ys=v=>H-PY-((v-mn)/(mx-mn))*(H-2*PY);
+const pts=tpData.map((v,i)=>`${xs(i).toFixed(1)},${ys(v).toFixed(1)}`).join(' ');
+const fill=`${xs(0).toFixed(1)},${H} ${pts} ${xs(tpData.length-1).toFixed(1)},${H}`;
+const svg=document.getElementById('throughputChart');
+svg.innerHTML=`<defs>
+  <linearGradient id="tg" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#00d4ff" stop-opacity=".25"/>
+    <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+  </linearGradient>
+</defs>
+<polygon points="${fill}" fill="url(#tg)"/>
+<polyline points="${pts}" fill="none" stroke="#00d4ff" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="2" y="12" font-size="9" fill="#3d5166" font-family="JetBrains Mono,monospace">GB/hr</text>
+${[0,2,4,6].map(v=>`<text x="2" y="${ys(v).toFixed(0)}" font-size="9" fill="#3d5166" font-family="JetBrains Mono,monospace" dominant-baseline="middle">${v}</text>`).join('')}`;
+
+// ── Country list ──────────────────────────────────────────
+const countries=[
+  {flag:'🇺🇸',name:'USA',   count:48, pct:34},
+  {flag:'🇯🇵',name:'Japan', count:31, pct:22},
+  {flag:'🇩🇪',name:'Germany',count:24,pct:17},
+  {flag:'🇧🇷',name:'Brazil',count:18, pct:13},
+  {flag:'🇰🇷',name:'Korea', count:12, pct:8},
+  {flag:'🇨🇦',name:'Canada',count:9,  pct:6},
+];
+const cl=document.getElementById('countryList');
+countries.forEach(c=>{
+  cl.innerHTML+=`<div class="country-row">
+    <span class="country-flag">${c.flag}</span>
+    <span class="country-name">${c.name}</span>
+    <div class="mbar-bg" style="flex:1"><div class="mbar-fill" style="width:0%;background:var(--accent)" data-w="${c.pct}%"></div></div>
+    <span class="mbar-val">${c.count}</span>
+  </div>`;
+});
+setTimeout(()=>document.querySelectorAll('.mbar-fill').forEach(b=>b.style.width=b.dataset.w),200);
+
+// ── Sessions table ────────────────────────────────────────
+const sessions=[
+  {id:'JP-US-07',scenario:'Kitchen pick-and-place',clips:3842,size:'142 GB',status:'labeling',ops:'US-Ops-4'},
+  {id:'JP-US-08',scenario:'Door open/close',       clips:2110,size:'78 GB', status:'ingest',  ops:'US-Ops-4'},
+  {id:'JP-JP-12',scenario:'Shelf stacking',         clips:4210,size:'196 GB',status:'qa',      ops:'JP-Ops-2'},
+  {id:'JP-DE-05',scenario:'Tool handover',          clips:1890,size:'69 GB', status:'delivered',ops:'DE-Ops-1'},
+];
+function statusChip(s){
+  const m={ingest:['cb','Ingesting'],labeling:['ca','Labeling'],qa:['cp','QA'],delivered:['cg','Delivered']};
+  const[cls,lbl]=m[s]||['cr',s];
+  return `<span class="chip ${cls}"><span class="dot${s==='ingest'?' p':''}"></span>${lbl}</span>`;
+}
+const st=document.getElementById('sessTable');
+st.innerHTML=`<thead><tr><th>Session ID</th><th>Scenario</th><th>Clips</th><th>Size</th><th>Operator</th><th>Status</th></tr></thead>`;
+const stb=document.createElement('tbody');
+sessions.forEach(r=>{
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td class="mono" style="color:var(--accent)">${r.id}</td>
+    <td style="font-size:11px">${r.scenario}</td>
+    <td class="mono">${r.clips.toLocaleString()}</td>
+    <td class="mono">${r.size}</td>
+    <td class="mono">${r.ops}</td>
+    <td>${statusChip(r.status)}</td>`;
+  stb.appendChild(tr);
+});
+st.appendChild(stb);
+
+// ── Pipeline health ───────────────────────────────────────
+const health=[
+  {name:'Ingest Workers',val:98,color:'var(--green)'},
+  {name:'Label API',     val:100,color:'var(--green)'},
+  {name:'QA Service',    val:97,color:'var(--green)'},
+  {name:'Export Jobs',   val:85,color:'var(--amber)'},
+  {name:'Payout Ledger', val:100,color:'var(--green)'},
+];
+const ph=document.getElementById('pipelineHealth');
+health.forEach(h=>{
+  ph.innerHTML+=`<div class="mbar-row">
+    <div class="mbar-label" style="font-size:11px">${h.name}</div>
+    <div class="mbar-bg"><div class="mbar-fill" style="width:0%;background:${h.color}" data-w="${h.val}%"></div></div>
+    <div class="mbar-val" style="color:${h.color}">${h.val}%</div>
+  </div>`;
+});
+setTimeout(()=>document.querySelectorAll('.mbar-fill').forEach(b=>b.style.width=b.dataset.w),200);
+
+// ── Log stream ────────────────────────────────────────────
+const logLines=[
+  {ts:'14:22:01',l:'i',msg:'IngestWorker: session <em>JP-US-08</em> chunk 041/112 received'},
+  {ts:'14:22:01',l:'i',msg:'content_hash <em>a3f8c...</em> → dedup check pass'},
+  {ts:'14:22:02',l:'s',msg:'Chunk validated · <em>712 MB</em> written to blob store'},
+  {ts:'14:22:02',l:'s',msg:'Postgres upsert → <em>clips</em> table · status=pending'},
+  {ts:'14:22:03',l:'i',msg:'LabelQueue.enqueue() → <em>42 clips</em> queued'},
+  {ts:'14:22:04',l:'s',msg:'Labeling assigned to <em>US-Ops-4</em> (3 workers)'},
+  {ts:'14:22:05',l:'w',msg:'ExportJob <em>EXP-091</em>: S3 rate-limit — retry 1/3 (back-off 2s)'},
+  {ts:'14:22:08',l:'s',msg:'ExportJob <em>EXP-091</em>: retry success · <em>8.2 GB</em> delivered'},
+  {ts:'14:22:09',l:'i',msg:'PayoutLedger.append() → <em>42 clips</em> × $0.12 · ops: US-Ops-4'},
+];
+const lb=document.getElementById('logBox');
+let li=0;
+function appendLog(box,lines,idx){
+  const i=idx[0]%lines.length;idx[0]++;
+  const l=lines[i];
+  const d=document.createElement('div');d.className='log-row';
+  d.innerHTML=`<span class="log-ts">${l.ts}</span><span class="log-lv ${l.l}">${{i:'INFO',s:'OK  ',w:'WARN',e:'ERR '}[l.l]}</span><span class="log-txt">${l.msg}</span>`;
+  box.appendChild(d);box.scrollTop=box.scrollHeight;
+}
+const idx=[0];
+(function loop(){appendLog(lb,logLines,idx);setTimeout(loop,900);})();
+
+// ── Capture panel ─────────────────────────────────────────
+const capSessions=[...sessions,
+  {id:'JP-KR-03',scenario:'Object sort',clips:2990,size:'108 GB',status:'labeling',ops:'KR-Ops-1'},
+  {id:'JP-BR-04',scenario:'Bin picking',clips:3310,size:'121 GB',status:'ingest',  ops:'BR-Ops-2'},
+];
+const ct=document.getElementById('captureTable');
+ct.innerHTML=`<thead><tr><th>Session ID</th><th>Scenario</th><th>Clips</th><th>Size</th><th>Operator</th><th>Status</th><th>Action</th></tr></thead>`;
+const ctb=document.createElement('tbody');
+capSessions.forEach(r=>{
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td class="mono" style="color:var(--accent)">${r.id}</td>
+    <td style="font-size:11px">${r.scenario}</td>
+    <td class="mono">${r.clips.toLocaleString()}</td>
+    <td class="mono">${r.size}</td>
+    <td class="mono">${r.ops}</td>
+    <td>${statusChip(r.status)}</td>
+    <td><button class="btn btn-ghost" style="font-size:10px;padding:3px 7px" onclick="nav('viewer',null)">View →</button></td>`;
+  ctb.appendChild(tr);
+});
+ct.appendChild(ctb);
+
+const scenarios=[
+  {name:'Pick-and-place',count:18,pct:30},{name:'Door/window ops',count:12,pct:20},
+  {name:'Object sorting', count:14,pct:23},{name:'Tool handover',  count:9,pct:15},
+  {name:'Bin picking',    count:7, pct:12},
+];
+const sl=document.getElementById('scenarioList');
+scenarios.forEach(s=>{
+  sl.innerHTML+=`<div class="mbar-row">
+    <div class="mbar-label">${s.name}</div>
+    <div class="mbar-bg"><div class="mbar-fill" style="width:0%;background:var(--accent)" data-w="${s.pct}%"></div></div>
+    <div class="mbar-val">${s.count}</div>
+  </div>`;
+});
+
+const ingestLogs=[...logLines];
+const iIdx=[0],iBox=document.getElementById('ingestLog');
+(function iLoop(){appendLog(iBox,ingestLogs,iIdx);setTimeout(iLoop,1100);})();
+
+// ── Video viewer ──────────────────────────────────────────
+let playing=false,frame=0,maxFrame=8160,raf=null;
+const COLORS=['#00e676','#00d4ff','#ffb300','#ff5252'];
+
+function initViewer(){
+  const canvases=[0,1,2,3].map(i=>{
+    const c=document.getElementById('c'+i);
+    const p=c.parentElement;
+    c.width=p.offsetWidth||220; c.height=p.offsetHeight||120;
+    return c;
+  });
+  drawFrame(canvases,frame);
+}
+
+function drawFrame(cvs,f){
+  const seeds=[7,13,31,47];
+  cvs.forEach((c,ci)=>{
+    const ctx=c.getContext('2d');
+    const W=c.width,H=c.height;
+    ctx.fillStyle='#060a0e';ctx.fillRect(0,0,W,H);
+    // Grid lines
+    ctx.strokeStyle='#1a2230';ctx.lineWidth=0.5;
+    for(let x=0;x<W;x+=W/8){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+    for(let y=0;y<H;y+=H/4){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+    // Simulated scene shapes
+    const seed=seeds[ci]+f*0.01;
+    const rng=(n)=>Math.abs(Math.sin(seed*n+ci)*0.5+0.5);
+    // Floor
+    ctx.fillStyle=`rgba(20,30,42,0.8)`;
+    ctx.fillRect(0,H*0.6,W,H*0.4);
+    // Object blob
+    const bx=W*(0.3+rng(1)*0.3), by=H*(0.35+rng(2)*0.2);
+    const bw=W*0.15, bh=H*0.15;
+    ctx.fillStyle=`rgba(0,212,255,0.12)`;
+    ctx.fillRect(bx,by,bw,bh);
+    ctx.strokeStyle=COLORS[ci];ctx.lineWidth=1.5;
+    ctx.strokeRect(bx,by,bw,bh);
+    // Label
+    ctx.fillStyle=COLORS[ci];ctx.font='8px JetBrains Mono,monospace';
+    ctx.fillText(ci===0?'OBJECT':'HAND',bx+2,by-3);
+    // Scan line
+    const sl=(f*2)%H;
+    ctx.fillStyle='rgba(0,212,255,0.04)';
+    ctx.fillRect(0,sl,W,2);
+    // Timestamp
+    const sec=Math.floor(f/30); const ms=Math.round((f%30)/30*1000);
+    ctx.fillStyle='#3d5166';ctx.font='8px JetBrains Mono,monospace';
+    ctx.fillText(`${String(sec).padStart(3,'0')}.${String(ms).padStart(3,'0')}s`,4,H-4);
+  });
+}
+
+function togglePlay(){
+  playing=!playing;
+  document.getElementById('playIcon').innerHTML=playing
+    ?'<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'
+    :'<polygon points="5 3 19 12 5 21 5 3"/>';
+  if(playing) runViewer(); else cancelAnimationFrame(raf);
+}
+
+function runViewer(){
+  const cvs=[0,1,2,3].map(i=>document.getElementById('c'+i));
+  if(!playing) return;
+  frame=(frame+1)%maxFrame;
+  const pct=(frame/maxFrame*100).toFixed(1);
+  document.getElementById('vpProgress').style.width=pct+'%';
+  const sec=Math.floor(frame/30);
+  document.getElementById('vpTime').textContent=
+    `${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')} / 04:32`;
+  drawFrame(cvs,frame);
+  document.getElementById('frameMeta').innerHTML=`
+    <div class="mono" style="display:flex;flex-direction:column;gap:4px">
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--text3)">Frame</span><span style="color:var(--text)">${frame} / ${maxFrame}</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--text3)">Timestamp</span><span style="color:var(--accent)">${(frame/30).toFixed(3)}s</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--text3)">Session</span><span>JP-US-07</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--text3)">Scenario</span><span>Kitchen P&P</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--text3)">Operator</span><span>US-Ops-4</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--text3)">Objects</span><span style="color:var(--green)">cup, counter</span></div>
+    </div>`;
+  raf=requestAnimationFrame(runViewer);
+}
+
+// Label events table
+const labelEvents=[
+  {frame:'0821',obj:'cup',action:'grasp',conf:0.97,labeler:'L-04'},
+  {frame:'1140',obj:'counter',action:'contact',conf:0.94,labeler:'L-04'},
+  {frame:'1830',obj:'cup',action:'place',conf:0.98,labeler:'L-04'},
+  {frame:'2102',obj:'hand_L',action:'retract',conf:0.91,labeler:'L-07'},
+];
+const lt=document.getElementById('labelTable');
+lt.innerHTML=`<thead><tr><th>Frame</th><th>Object</th><th>Action</th><th>Conf</th><th>Labeler</th></tr></thead>`;
+const ltb=document.createElement('tbody');
+labelEvents.forEach(r=>{
+  const tr=document.createElement('tr');
+  const cc=r.conf>=0.95?'cg':'ca';
+  tr.innerHTML=`<td class="mono">${r.frame}</td><td style="font-size:11px">${r.obj}</td>
+    <td class="mono">${r.action}</td>
+    <td><span class="chip ${cc}">${r.conf}</span></td>
+    <td class="mono">${r.labeler}</td>`;
+  ltb.appendChild(tr);
+});
+lt.appendChild(ltb);
+document.getElementById('frameMeta').innerHTML=`<div class="mono" style="color:var(--text3)">Press play to start</div>`;
+
+// ── Labeling panel ────────────────────────────────────────
+const lQueue=[
+  {id:'JP-US-07-0821',session:'JP-US-07',frames:'0820–0900',type:'grasp',priority:'high',  labeler:'L-04'},
+  {id:'JP-US-07-1130',session:'JP-US-07',frames:'1130–1200',type:'contact',priority:'high',labeler:'L-04'},
+  {id:'JP-JP-12-0440',session:'JP-JP-12',frames:'0440–0510',type:'place',  priority:'med', labeler:'—'},
+  {id:'JP-JP-12-0900',session:'JP-JP-12',frames:'0900–0970',type:'grasp',  priority:'med', labeler:'—'},
+  {id:'JP-US-08-0010',session:'JP-US-08',frames:'0010–0080',type:'open',   priority:'low', labeler:'—'},
+];
+const lq=document.getElementById('labelQueue');
+lq.innerHTML=`<thead><tr><th>Clip ID</th><th>Session</th><th>Frames</th><th>Type</th><th>Priority</th><th>Labeler</th><th>Status</th></tr></thead>`;
+const lqb=document.createElement('tbody');
+lQueue.forEach(r=>{
+  const tr=document.createElement('tr');
+  const pc=r.priority==='high'?'cr':r.priority==='med'?'ca':'cb';
+  const sc=r.labeler!=='—'?'<span class="chip cg">In Progress</span>':'<span class="chip ca">Pending</span>';
+  tr.innerHTML=`<td class="mono" style="color:var(--accent)">${r.id}</td>
+    <td class="mono">${r.session}</td>
+    <td class="mono">${r.frames}</td>
+    <td style="font-size:11px">${r.type}</td>
+    <td><span class="chip ${pc}">${r.priority}</span></td>
+    <td class="mono">${r.labeler}</td>
+    <td>${sc}</td>`;
+  lqb.appendChild(tr);
+});
+lq.appendChild(lqb);
+
+const accData=[
+  {name:'Grasp events',   val:97,color:'var(--green)'},
+  {name:'Place events',   val:94,color:'var(--green)'},
+  {name:'Contact labels', val:91,color:'var(--accent)'},
+  {name:'Retract events', val:88,color:'var(--amber)'},
+];
+const la=document.getElementById('labelAccuracy');
+accData.forEach(a=>{
+  la.innerHTML+=`<div class="mbar-row">
+    <div class="mbar-label">${a.name}</div>
+    <div class="mbar-bg"><div class="mbar-fill" style="width:0%;background:${a.color}" data-w="${a.val}%"></div></div>
+    <div class="mbar-val" style="color:${a.color}">${a.val}%</div>
+  </div>`;
+});
+
+const aiLogs=[
+  {ts:'14:22:01',l:'i',msg:'LLMValidator: checking <em>JP-US-07-0821</em> (grasp)'},
+  {ts:'14:22:01',l:'i',msg:'BBox ratio: <em>0.14</em> (hand → cup) · within range'},
+  {ts:'14:22:02',l:'s',msg:'Confidence <em>0.97</em> → pass · no QA flag'},
+  {ts:'14:22:02',l:'i',msg:'LLMValidator: checking <em>JP-JP-12-0440</em> (place)'},
+  {ts:'14:22:03',l:'w',msg:'BBox ratio <em>0.63</em> → anomalous · flagging for QA'},
+  {ts:'14:22:03',l:'s',msg:'QA flag pushed → <em>clip JP-JP-12-0440</em>'},
+];
+const avIdx=[0],avBox=document.getElementById('aiValLog');
+(function avLoop(){appendLog(avBox,aiLogs,avIdx);setTimeout(avLoop,950);})();
+
+// ── QA panel ─────────────────────────────────────────────
+const qaItems=[
+  {title:'JP-JP-12-0440 — Anomalous BBox',   type:'AI Flag',   meta:'grasp label · BBox ratio 0.63 (expected <0.25) · AI confidence 0.71',status:'review'},
+  {title:'JP-US-07-2201 — Frame blur',        type:'Auto Flag', meta:'motion blur detected · 4 consecutive frames · unusable for training',  status:'review'},
+  {title:'JP-KR-03-1890 — Label mismatch',    type:'Manual',    meta:'"place" label at frame 1890 conflicts with hand retract motion',        status:'review'},
+  {title:'JP-DE-05-0410 — Low confidence',    type:'AI Flag',   meta:'contact label conf 0.68 · below 0.80 threshold · needs re-label',      status:'review'},
+  {title:'JP-US-07-0821 — Validated',         type:'Passed',    meta:'grasp label · BBox 0.14 · LLM pass · shipped to delivery queue',       status:'passed'},
+];
+const ql=document.getElementById('qaList');
+qaItems.forEach(q=>{
+  const sc=q.status==='passed'?'cg':'ca';
+  const tc=q.type==='AI Flag'?'cb':q.type==='Passed'?'cg':'cp';
+  ql.innerHTML+=`<div class="qa-item">
+    <div class="qa-hd">
+      <span class="chip ${tc}">${q.type}</span>
+      <div class="qa-title">${q.title}</div>
+      <span class="chip ${sc}">${q.status}</span>
+    </div>
+    <div class="qa-meta">${q.meta}</div>
+    <div class="qa-ft">
+      ${q.status!=='passed'?`<button class="btn btn-primary" style="font-size:10px;padding:3px 9px">✓ Approve</button>
+      <button class="btn btn-ghost" style="font-size:10px;padding:3px 9px">Re-label</button>
+      <button class="btn btn-ghost" style="font-size:10px;padding:3px 9px;color:var(--red)">Reject</button>`
+      :`<span class="chip cg">Shipped to delivery</span>`}
+    </div>
+  </div>`;
+});
+const qm=document.getElementById('qaMet');
+[{n:'Pass Rate',v:94.2,c:'var(--green)'},{n:'AI Flags',v:5.8,c:'var(--amber)'},{n:'Reject Rate',v:0.9,c:'var(--red)'}]
+.forEach(m=>{
+  qm.innerHTML+=`<div style="margin-bottom:14px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+      <span style="font-size:11px;font-weight:600">${m.n}</span>
+      <span style="font-size:12px;font-weight:800;font-family:'JetBrains Mono',monospace;color:${m.c}">${m.v}%</span>
+    </div>
+    <div class="mbar-bg"><div class="mbar-fill" style="width:0%;background:${m.c}" data-w="${m.v}%"></div></div>
+  </div>`;
+});
+
+// ── Delivery panel ────────────────────────────────────────
+const deliveries=[
+  {lab:'Anthropic',session:'JP-US-07',clips:'3,842',size:'142 GB',format:'MP4+JSON',status:'delivered',date:'Today'},
+  {lab:'Figure AI', session:'JP-JP-12',clips:'4,210',size:'196 GB',format:'MKV+JSON',status:'in-transit',date:'Today'},
+  {lab:'Boston Dyn.',session:'JP-DE-05',clips:'1,890',size:'69 GB', format:'MP4+JSON',status:'delivered',date:'Oct 30'},
+  {lab:'1X Tech',   session:'JP-KR-03',clips:'2,990',size:'108 GB',format:'MKV+JSON',status:'qa',       date:'—'},
+];
+const dv=document.getElementById('delivTable');
+dv.innerHTML=`<thead><tr><th>AI Lab</th><th>Session</th><th>Clips</th><th>Size</th><th>Format</th><th>Date</th><th>Status</th></tr></thead>`;
+const dvb=document.createElement('tbody');
+deliveries.forEach(r=>{
+  const tr=document.createElement('tr');
+  const sc=r.status==='delivered'?'cg':r.status==='in-transit'?'cb':r.status==='qa'?'ca':'cr';
+  tr.innerHTML=`<td style="font-size:11px;font-weight:700">${r.lab}</td>
+    <td class="mono" style="color:var(--accent)">${r.session}</td>
+    <td class="mono">${r.clips}</td>
+    <td class="mono">${r.size}</td>
+    <td class="mono">${r.format}</td>
+    <td style="font-size:10px;color:var(--text3)">${r.date}</td>
+    <td><span class="chip ${sc}">${r.status}</span></td>`;
+  dvb.appendChild(tr);
+});
+dv.appendChild(dvb);
+
+const expLogs=[
+  {ts:'14:20:01',l:'i',msg:'ExportJob <em>EXP-092</em>: packaging <em>JP-US-07</em> (3,842 clips)'},
+  {ts:'14:20:03',l:'i',msg:'Validating checksums · <em>142 GB</em> across 92 chunks'},
+  {ts:'14:20:08',l:'s',msg:'All checksums match · export bundle signed'},
+  {ts:'14:20:08',l:'s',msg:'S3 PUT → s3://lab-ingest/anthropic/JP-US-07.tar.gz'},
+  {ts:'14:20:11',l:'s',msg:'Delivery confirmed · <em>Anthropic</em> receipt acknowledged'},
+  {ts:'14:21:30',l:'w',msg:'ExportJob <em>EXP-091</em>: S3 rate-limit — retry 1/3'},
+  {ts:'14:21:34',l:'s',msg:'Retry OK · <em>Figure AI</em> bundle in transit'},
+];
+const eIdx=[0],eBox=document.getElementById('exportLog');
+(function eLoop(){appendLog(eBox,expLogs,eIdx);setTimeout(eLoop,1000);})();
+
+const payouts=[
+  {ops:'US-Ops-4',clips:3842,rate:'$0.12',earn:'$461.04',status:'pending'},
+  {ops:'JP-Ops-2',clips:4210,rate:'$0.10',earn:'$421.00',status:'paid'},
+  {ops:'DE-Ops-1',clips:1890,rate:'$0.11',earn:'$207.90',status:'paid'},
+  {ops:'KR-Ops-1',clips:2990,rate:'$0.10',earn:'$299.00',status:'pending'},
+];
+const pw=document.getElementById('payoutTable');
+pw.innerHTML=`<thead><tr><th>Operator</th><th>Clips</th><th>Rate</th><th>Earnings</th><th>Status</th></tr></thead>`;
+const pwb=document.createElement('tbody');
+payouts.forEach(r=>{
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td class="mono">${r.ops}</td><td class="mono">${r.clips.toLocaleString()}</td>
+    <td class="mono">${r.rate}</td><td class="mono" style="color:var(--green)">${r.earn}</td>
+    <td><span class="chip ${r.status==='paid'?'cg':'ca'}">${r.status}</span></td>`;
+  pwb.appendChild(tr);
+});
+pw.appendChild(pwb);
+
+// ── Code ──────────────────────────────────────────────────
+const codes=[
+`<span class="cm"># ingest/worker.py — Mecka Data Platform</span>
+<span class="cm"># Idempotent chunk ingest: content_hash dedup → Postgres → labeling queue</span>
+
+<span class="kw">import</span> <span class="var">hashlib</span>, <span class="var">asyncio</span>
+<span class="kw">from</span> <span class="var">psycopg2</span> <span class="kw">import</span> <span class="var">pool</span>
+<span class="kw">from</span> <span class="var">dataclasses</span> <span class="kw">import</span> <span class="var">dataclass</span>
+
+<span class="dec">@dataclass</span>
+<span class="kw">class</span> <span class="ty">Chunk</span>:
+    <span class="var">session_id</span><span class="op">:</span> <span class="ty">str</span>
+    <span class="var">index</span><span class="op">:</span>      <span class="ty">int</span>
+    <span class="var">data</span><span class="op">:</span>       <span class="ty">bytes</span>
+    <span class="var">content_hash</span><span class="op">:</span> <span class="ty">str</span> <span class="op">=</span> <span class="str">''</span>
+
+    <span class="kw">def</span> <span class="fn">__post_init__</span>(<span class="var">self</span>):
+        <span class="var">self</span><span class="op">.</span><span class="var">content_hash</span> <span class="op">=</span> <span class="var">hashlib</span><span class="op">.</span><span class="fn">sha256</span>(<span class="var">self</span><span class="op">.</span><span class="var">data</span>)<span class="op">.</span><span class="fn">hexdigest</span>()
+
+<span class="kw">async def</span> <span class="fn">ingest_chunk</span>(<span class="var">chunk</span><span class="op">:</span> <span class="ty">Chunk</span>, <span class="var">db</span><span class="op">:</span> <span class="ty">pool.ThreadedConnectionPool</span>):
+    <span class="kw">with</span> <span class="var">db</span><span class="op">.</span><span class="fn">getconn</span>() <span class="kw">as</span> <span class="var">conn</span><span class="op">:</span>
+        <span class="kw">with</span> <span class="var">conn</span><span class="op">.</span><span class="fn">cursor</span>() <span class="kw">as</span> <span class="var">cur</span><span class="op">:</span>
+            <span class="cm"># Idempotent upsert — re-uploads are free</span>
+            <span class="var">cur</span><span class="op">.</span><span class="fn">execute</span>(<span class="str">"""
+                INSERT INTO chunks (session_id, index, content_hash, status, size_bytes)
+                VALUES (%s, %s, %s, 'pending', %s)
+                ON CONFLICT (content_hash) DO NOTHING
+                RETURNING id
+            """</span>, (<span class="var">chunk</span><span class="op">.</span><span class="var">session_id</span>, <span class="var">chunk</span><span class="op">.</span><span class="var">index</span>,
+                   <span class="var">chunk</span><span class="op">.</span><span class="var">content_hash</span>, <span class="fn">len</span>(<span class="var">chunk</span><span class="op">.</span><span class="var">data</span>)))
+            <span class="var">row</span> <span class="op">=</span> <span class="var">cur</span><span class="op">.</span><span class="fn">fetchone</span>()
+            <span class="kw">if not</span> <span class="var">row</span><span class="op">:</span>
+                <span class="kw">return</span>  <span class="cm"># duplicate — skip</span>
+
+            <span class="cm"># Write to blob store, then update status atomically</span>
+            <span class="kw">await</span> <span class="fn">write_blob</span>(<span class="var">chunk</span><span class="op">.</span><span class="var">content_hash</span>, <span class="var">chunk</span><span class="op">.</span><span class="var">data</span>)
+            <span class="var">cur</span><span class="op">.</span><span class="fn">execute</span>(<span class="str">"UPDATE chunks SET status='stored' WHERE id=%s"</span>, (<span class="var">row</span>[<span class="num">0</span>],))
+            <span class="cm"># Enqueue clips for labeling</span>
+            <span class="kw">await</span> <span class="fn">enqueue_clips</span>(<span class="var">chunk</span><span class="op">.</span><span class="var">session_id</span>, <span class="var">row</span>[<span class="num">0</span>])
+            <span class="var">conn</span><span class="op">.</span><span class="fn">commit</span>()`,
+
+`<span class="cm">// api/chunks.ts — Mecka Data Platform</span>
+<span class="cm">// Range-based streaming endpoint for large sensor/video files</span>
+<span class="cm">// Serves 30s sliding window — no full download needed for playback</span>
+
+<span class="kw">import</span> { <span class="ty">NextRequest</span>, <span class="ty">NextResponse</span> } <span class="kw">from</span> <span class="str">'next/server'</span><span class="op">;</span>
+<span class="kw">import</span> { <span class="var">getBlobStream</span> } <span class="kw">from</span> <span class="str">'@/lib/storage'</span><span class="op">;</span>
+
+<span class="kw">export async function</span> <span class="fn">GET</span>(<span class="var">req</span><span class="op">:</span> <span class="ty">NextRequest</span>): <span class="ty">Promise</span><span class="op">&lt;</span><span class="ty">Response</span><span class="op">&gt;</span> {
+  <span class="kw">const</span> <span class="var">chunkId</span>  <span class="op">=</span> <span class="var">req</span><span class="op">.</span><span class="fn">nextUrl</span><span class="op">.</span><span class="var">searchParams</span><span class="op">.</span><span class="fn">get</span>(<span class="str">'id'</span>)<span class="op">!</span><span class="op">;</span>
+  <span class="kw">const</span> <span class="var">rangeHdr</span> <span class="op">=</span> <span class="var">req</span><span class="op">.</span><span class="var">headers</span><span class="op">.</span><span class="fn">get</span>(<span class="str">'range'</span>)<span class="op">;</span>
+
+  <span class="kw">const</span> { <span class="var">stream</span>, <span class="var">totalBytes</span> } <span class="op">=</span> <span class="kw">await</span> <span class="fn">getBlobStream</span>(<span class="var">chunkId</span>)<span class="op">;</span>
+
+  <span class="kw">if</span> (<span class="var">rangeHdr</span>) {
+    <span class="cm">// HTTP Range: only stream the requested window</span>
+    <span class="kw">const</span> [<span class="var">start</span>, <span class="var">end</span>] <span class="op">=</span> <span class="fn">parseRange</span>(<span class="var">rangeHdr</span>, <span class="var">totalBytes</span>)<span class="op">;</span>
+    <span class="kw">return new</span> <span class="ty">Response</span>(<span class="var">stream</span><span class="op">.</span><span class="fn">slice</span>(<span class="var">start</span>, <span class="var">end</span>), {
+      status<span class="op">:</span>  <span class="num">206</span>,
+      headers<span class="op">:</span> {
+        <span class="str">'Content-Range'</span><span class="op">:</span>  <span class="str">\`bytes \${start}-\${end}/\${totalBytes}\`</span>,
+        <span class="str">'Content-Length'</span><span class="op">:</span> <span class="str">\`\${end - start + 1}\`</span>,
+        <span class="str">'Accept-Ranges'</span><span class="op">:</span>  <span class="str">'bytes'</span>,
+        <span class="str">'Content-Type'</span><span class="op">:</span>   <span class="str">'video/mp4'</span>,
+        <span class="str">'Cache-Control'</span><span class="op">:</span>  <span class="str">'private, max-age=300'</span>,
+      },
+    })<span class="op">;</span>
+  }
+  <span class="kw">return new</span> <span class="ty">Response</span>(<span class="var">stream</span>, {
+    headers<span class="op">:</span> { <span class="str">'Content-Type'</span><span class="op">:</span> <span class="str">'video/mp4'</span>, <span class="str">'Content-Length'</span><span class="op">:</span> <span class="str">\`\${totalBytes}\`</span> },
+  })<span class="op">;</span>
+}`,
+
+`<span class="cm"># agents/label_validator.py — Mecka Data Platform</span>
+<span class="cm"># LLM-assisted label QA: flags anomalous bounding boxes before they ship</span>
+
+<span class="kw">import</span> <span class="var">anthropic</span>, <span class="var">json</span>
+<span class="kw">from</span> <span class="var">dataclasses</span> <span class="kw">import</span> <span class="var">dataclass</span>
+
+<span class="var">claude</span> <span class="op">=</span> <span class="var">anthropic</span><span class="op">.</span><span class="fn">Anthropic</span>()
+
+<span class="dec">@dataclass</span>
+<span class="kw">class</span> <span class="ty">LabelResult</span>:
+    <span class="var">clip_id</span><span class="op">:</span>   <span class="ty">str</span>
+    <span class="var">passed</span><span class="op">:</span>   <span class="ty">bool</span>
+    <span class="var">issues</span><span class="op">:</span>   <span class="ty">list</span>[<span class="ty">str</span>]
+    <span class="var">confidence</span><span class="op">:</span> <span class="ty">float</span>
+
+<span class="kw">async def</span> <span class="fn">validate_label</span>(<span class="var">clip_id</span><span class="op">:</span> <span class="ty">str</span>, <span class="var">label_json</span><span class="op">:</span> <span class="ty">dict</span>) <span class="op">-></span> <span class="ty">LabelResult</span>:
+    <span class="var">resp</span> <span class="op">=</span> <span class="var">claude</span><span class="op">.</span><span class="var">messages</span><span class="op">.</span><span class="fn">create</span>(
+        model<span class="op">=</span><span class="str">"claude-haiku-4-5"</span>,
+        max_tokens<span class="op">=</span><span class="num">256</span>,
+        system<span class="op">=</span><span class="str">"""You are a robotics data QA agent.
+Given a label JSON for an egocentric video clip, check:
+1. bbox_ratio (w*h / frame area) must be <0.30 for hand/object labels
+2. action must be consistent with adjacent frame actions
+3. confidence must be >0.80 to pass
+Return JSON: {passed: bool, issues: [str], confidence: float}"""</span>,
+        messages<span class="op">=</span>[{<span class="str">"role"</span><span class="op">:</span> <span class="str">"user"</span>, <span class="str">"content"</span><span class="op">:</span> <span class="var">json</span><span class="op">.</span><span class="fn">dumps</span>(<span class="var">label_json</span>)}],
+    )
+    <span class="var">result</span> <span class="op">=</span> <span class="var">json</span><span class="op">.</span><span class="fn">loads</span>(<span class="var">resp</span><span class="op">.</span><span class="var">content</span>[<span class="num">0</span>]<span class="op">.</span><span class="var">text</span>)
+    <span class="kw">if not</span> <span class="var">result</span>[<span class="str">'passed'</span>]:
+        <span class="kw">await</span> <span class="fn">push_qa_flag</span>(<span class="var">clip_id</span>, <span class="var">result</span>[<span class="str">'issues'</span>])
+    <span class="kw">else</span><span class="op">:</span>
+        <span class="kw">await</span> <span class="fn">enqueue_delivery</span>(<span class="var">clip_id</span>)
+    <span class="kw">return</span> <span class="ty">LabelResult</span>(<span class="var">clip_id</span><span class="op">=</span><span class="var">clip_id</span>, <span class="op">**</span><span class="var">result</span>)`
+];
+
+document.getElementById('codeArea').innerHTML=codes[0];
+function cTab(i,el){
+  document.querySelectorAll('#codeTabs .ctab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('codeArea').innerHTML=codes[i];
+}
+
+// ── Animate all bars on load ──────────────────────────────
+setTimeout(()=>document.querySelectorAll('[data-w]').forEach(b=>b.style.width=b.dataset.w),300);
+</script>
